@@ -16,6 +16,7 @@ class MessagesTableViewController: UITableViewController, NFCNDEFReaderSessionDe
     let reuseIdentifier = "reuseIdentifier"
     var detectedMessages = [NFCNDEFMessage]()
     var session: NFCNDEFReaderSession?
+    var writeDelegate: NFCNDEFWriteDelegate?
 
     // MARK: - Actions
 
@@ -33,6 +34,32 @@ class MessagesTableViewController: UITableViewController, NFCNDEFReaderSessionDe
         }
 
         session = NFCNDEFReaderSession(delegate: self, queue: nil, invalidateAfterFirstRead: false)
+        session?.alertMessage = "Hold your iPhone near the item to learn more about it."
+        session?.begin()
+    }
+
+    @IBAction func writeToNew () {
+        guard NFCNDEFReaderSession.readingAvailable else {
+            let alertController = UIAlertController(
+                title: "Scanning Not Supported",
+                message: "This device doesn't support tag scanning.",
+                preferredStyle: .alert
+            )
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+
+        guard let payload = NFCNDEFPayload.wellKnownTypeTextPayload(string: "Hello NFC World!", locale: .init(identifier: "en_US")) else {
+            return
+        }
+        let message = NFCNDEFMessage(
+            records: [payload])
+        let delegate = NFCNDEFWriteDelegate(
+            message: message,
+            viewController: self)
+        self.writeDelegate = delegate
+        session = NFCNDEFReaderSession(delegate: delegate, queue: nil, invalidateAfterFirstRead: false)
         session?.alertMessage = "Hold your iPhone near the item to learn more about it."
         session?.begin()
     }
