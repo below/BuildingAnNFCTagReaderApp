@@ -2,6 +2,10 @@
 
 Read NFC tags with NDEF messages in your app.
 
+## Update
+
+This is originally [Apple Sample Code](https://developer.apple.com/documentation/corenfc/building_an_nfc_tag-reader_app). The sample was unable to write to factory-new tags, so I have moved the write functionality to its own delegate class and added a "Write New" button on the initial screen (`MessagesTableViewController`) which can be used for that purpose. I hope it helps.
+
 ## Overview
 
 This sample code project shows how to use Core NFC in an app to read Near Field Communication (NFC) tags of types 1 through 5 that contains NFC Data Exchange Format (NDEF) data. To use this sample, download the project and build it using Xcode. Run the sample app on your iPhone. Tap the Scan button to start scanning for tags, then hold the phone near an NFC tag.
